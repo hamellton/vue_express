@@ -19,10 +19,6 @@ new Vue({
             this.contacts.push({...contact, id: Date.now()})
             this.form.name = this.form.value = ''
             console.log(contact)
-        },
-        deleteContact() {
-            this.form.pop()
-            console.log('delete')
         }
     }
 })
