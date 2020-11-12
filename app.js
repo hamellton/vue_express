@@ -1,8 +1,38 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const { dirname } = require('path')
-const app = express()
 const path = require('path')
+const {v4} = require('uuid')
+const app = express()
 
+const CONTACTS = [
+    {
+        id: v4(),
+        name: 'Konstantin',
+        value: '+380977849249',
+        marked: false
+    }
+]
+app.use(express.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+// app.use(express.json())
+
+
+// GET
+app.get('/api/contacts', (req, res) => {
+    setTimeout(() => {
+        res.status(200).json(CONTACTS)
+    }, 0)
+})
+
+// POST
+app.post('/api/contacts', (req, res) => {
+    const contact = {...req.body, id: v4(), marked: false}
+    console.log(req)
+    CONTACTS.push(contact)
+    console.log(CONTACTS)
+    res.status(201).json(contact)
+  })
 
 
 
