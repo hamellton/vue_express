@@ -31,9 +31,9 @@ new Vue({
     methods: {
         async createContact() {
             const {...contact} = this.form
-            const response = await request('/api/contacts', 'POST', contact)
-            console.log(response)
-            this.contacts.push(response)
+            const newContact = await request('/api/contacts', 'POST', contact)
+            console.log(newContact)
+            this.contacts.push(newContact)
       
             this.form.name = this.form.value = ''
           },
@@ -57,7 +57,7 @@ async function request(url, method = 'GET', data = null) {
         const headers = {}
         let body
         if (data) {
-            headers['Cntent-type'] = 'application/json'
+            headers['Content-type'] = 'application/json'
             body = JSON.stringify(data)
         }
 

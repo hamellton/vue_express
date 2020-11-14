@@ -1,9 +1,16 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const { dirname } = require('path')
+// const { dirname } = require('path')
 const path = require('path')
 const {v4} = require('uuid')
 const app = express()
+
+app.use(bodyParser.urlencoded({ extended: true })); // для чтения body post запроса
+// app.use(bodyParser.json()); // для чтения body post запроса
+app.use(express.json())
+
+// app.use(express.json()); // to support JSON-encoded bodies
+// app.use(express.urlencoded({ extended: true })); // to support URL-encoded bodies
 
 const CONTACTS = [
     {
@@ -13,10 +20,6 @@ const CONTACTS = [
         marked: false
     }
 ]
-app.use(express.urlencoded({ extended: true }))
-app.use(bodyParser.json())
-// app.use(express.json())
-
 
 // GET
 app.get('/api/contacts', (req, res) => {
@@ -28,7 +31,8 @@ app.get('/api/contacts', (req, res) => {
 // POST
 app.post('/api/contacts', (req, res) => {
     const contact = {...req.body, id: v4(), marked: false}
-    console.log(req)
+    // console.log(req.body)
+    console.log(req.body)
     CONTACTS.push(contact)
     console.log(CONTACTS)
     res.status(201).json(contact)
