@@ -31,6 +31,7 @@ new Vue({
     methods: {
         async createContact() {
             const {...contact} = this.form
+            console.log({...contact})
             const newContact = await request('/api/contacts', 'POST', contact)
             console.log(newContact)
             this.contacts.push(newContact)
