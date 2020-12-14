@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+let Schema = mongoose.Schema;
 // const { dirname } = require('path')
 const path = require('path')
 const {v4} = require('uuid')
@@ -15,18 +16,16 @@ app.use(bodyParser.urlencoded({ extended: true })); // для чтения body 
 // app.use(bodyParser.json()); // для чтения body post запроса
 app.use(express.json())
 
-let connectMongoose = async () => {
-    mongoose.connect(URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-        .then(() => console.log('connected with database mongo...'))
-        .catch((e) => console.log(e))
-}
-connectMongoose()
+// let connectMongoose = async () => {
+//     mongoose.connect(URL, {
+//         useNewUrlParser: true,
+//         useUnifiedTopology: true
+//     })
+//         .then(() => console.log('connected with database mongo...'))
+//         .catch((e) => console.log(e))
+// }
 
-// app.use(express.json()); // to support JSON-encoded bodies
-// app.use(express.urlencoded({ extended: true })); // to support URL-encoded bodies
+// connectMongoose()
 
 const CONTACTS = [
     {
@@ -37,6 +36,32 @@ const CONTACTS = [
     }
 ]
 
+mongoose.connect('mongodb://localhost/mongodb', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+
+});
+const MyModel = mongoose.model('mongos', new Schema({
+    name: String,
+    value: String
+}));
+// Works
+MyModel.findOne(function(error, result) {
+    if (result !== null) {
+        // console.log(result)
+        let newContacts = {
+            _id: result._id,
+            name: result.name,
+            value: result.value
+        }
+        CONTACTS.push(newContacts)
+        // console.log(CONTACTS)
+    } else {
+        if (!error) throw error
+        console.log(error + 'throw error')
+    }
+});
+
 // GET
 app.get('/api/contacts', (req, res) => {
     setTimeout(() => {
@@ -46,7 +71,7 @@ app.get('/api/contacts', (req, res) => {
 
 // POST
 app.post('/api/contacts', (req, res) => {
-    const mongoSchema = mongoose.Schema({
+    const mongoSchema = new Schema({
         _id: String,
         name: String,
         value: String
@@ -75,4 +100,6 @@ app.use(express.static(path.resolve(__dirname, 'client')))
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'index.html'))
 })
+// connectMongoose()
+
 app.listen(PORT, () => console.log(`Server has been started on port ${PORT}...`))
