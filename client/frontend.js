@@ -30,10 +30,9 @@ new Vue({
     methods: {
         async createContact() {
             const {...contact} = this.form
-            console.log({...contact})
             const newContact = await request('/api/contacts', 'POST', contact)
-            console.log(newContact)
             this.contacts.push(newContact)
+            console.log(newContact)
       
             this.form.name = this.form.value = ''
           },
@@ -48,6 +47,7 @@ new Vue({
     async mounted () {
         this.loading = true
         this.contacts = await request('/api/contacts')
+        console.log(this.contacts)
         this.loading = false
     }
 })
@@ -59,6 +59,7 @@ async function request(url, method = 'GET', data = null) {
         if (data) {
             headers['Content-type'] = 'application/json'
             body = JSON.stringify(data)
+            console.log(data)
         }
 
         const response = await fetch(url, {
